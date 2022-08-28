@@ -24,7 +24,7 @@ class Game():
         return True
     def copy (self):
         other = Game()
-        other.board=copy.deepcopy(self.board)
+        other.board=copy.copy(self.board)
         other.history=copy.copy(self.history)
         return other
     def winner (self):
@@ -102,6 +102,7 @@ while (False==game.ended()):
     bestValue = -ntries
     si = 0
     while si<9:
+        print (str(si)+": "+str(statistics[si]))
         if (game.board[si]==0) and (statistics[si]>=bestValue):
             bestValue = statistics[si]
             bestIndex = si
