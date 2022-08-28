@@ -79,9 +79,10 @@ while (False==game.ended()):
     ntries = 10000
     while ti<ntries:
         g = game.copy()
-        position = int(urandom(1)[0])%9
-        if g.play(position)==False:
-            continue
+        computerPlayed = False
+        while computerPlayed==False:
+            position = int(urandom(1)[0])%9
+            computerPlayed = g.play(position)
         g.randomPlay()
         gw = g.winner()
         ginc = 0
