@@ -142,7 +142,7 @@ while (False==game.ended()):
         bestValue = -ntries
         si = 0
         while si<9:
-            print (str(si)+": "+str(statistics[si]))
+            #print (str(si)+": "+str(statistics[si]))
             if (game.board[si]==0) and (statistics[si]>=bestValue):
                 bestValue = statistics[si]
                 bestIndex = si
