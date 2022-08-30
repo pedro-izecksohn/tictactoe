@@ -59,6 +59,42 @@ class Game():
     def randomPlay (self):
         while self.ended()==False:
             self.play (int(urandom(1)[0])%9)
+    def almost3 (self, a, b, c):
+        if self.board[a]!=0:
+            if self.board[a]==self.board[b]:
+                if self.board[c]==0:
+                    return c
+            if self.board[a]==self.board[c]:
+                if self.board[b]==0:
+                    return b
+        if self.board[b]!=0:
+            if self.board[b]==self.board[c]:
+                if self.board[a]==0:
+                    return a
+        return -1
+    def almost(self):
+        i = self.almost3(0,1,2)
+        if i!=-1:
+            return i
+        i = self.almost3(0,4,8)
+        if i!=-1:
+            return i
+        i = self.almost3(3,4,5)
+        if i!=-1:
+            return i
+        i = self.almost3(6,7,8)
+        if i!=-1:
+            return i
+        i = self.almost3(0,3,6)
+        if i!=-1:
+            return i
+        i = self.almost3(6,4,2)
+        if i!=-1:
+            return i
+        i = self.almost3(1,4,7)
+        if i!=-1:
+            return i
+        return self.almost3(2,5,8)
 
 game = Game()
 print (game)
@@ -74,42 +110,46 @@ elif c!='s':
     print ("Invalid option.")
     exit()
 while (False==game.ended()):
-    statistics = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ti = 0
-    ntries = 10000
-    while ti<ntries:
-        g = game.copy()
-        computerPlayed = False
-        while computerPlayed==False:
-            position = int(urandom(1)[0])%9
-            computerPlayed = g.play(position)
-        g.randomPlay()
-        gw = g.winner()
-        ginc = 0
-        if gw==1:
-            if c=='f':
-                ginc = -1
-            else:
-                ginc = 1
-        elif gw==2:
-            if c=='f':
-                ginc = 1
-            else:
-                ginc = -1
-        statistics[position] = statistics[position]+ginc
-        ti = ti+1
-    bestIndex = 9
-    bestValue = -ntries
-    si = 0
-    while si<9:
-        print (str(si)+": "+str(statistics[si]))
-        if (game.board[si]==0) and (statistics[si]>=bestValue):
-            bestValue = statistics[si]
-            bestIndex = si
-        si = si+1
-    if game.play(bestIndex)==False:
-        print ("I desist.")
-        exit()
+    alm = game.almost()
+    if alm!=-1:
+        game.play(alm)
+    else:
+        statistics = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ti = 0
+        ntries = 10000
+        while ti<ntries:
+            g = game.copy()
+            computerPlayed = False
+            while computerPlayed==False:
+                position = int(urandom(1)[0])%9
+                computerPlayed = g.play(position)
+            g.randomPlay()
+            gw = g.winner()
+            ginc = 0
+            if gw==1:
+                if c=='f':
+                    ginc = -1
+                else:
+                    ginc = 1
+            elif gw==2:
+                if c=='f':
+                    ginc = 1
+                else:
+                    ginc = -1
+            statistics[position] = statistics[position]+ginc
+            ti = ti+1
+        bestIndex = 9
+        bestValue = -ntries
+        si = 0
+        while si<9:
+            print (str(si)+": "+str(statistics[si]))
+            if (game.board[si]==0) and (statistics[si]>=bestValue):
+                bestValue = statistics[si]
+                bestIndex = si
+            si = si+1
+        if game.play(bestIndex)==False:
+            print ("I desist.")
+            exit()
     print (game)
     if game.ended():
         break
