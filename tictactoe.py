@@ -4,15 +4,15 @@ from os import urandom
 class Game():
     def __init__(self):
         self.board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        self.history = ""
+        self.history = []
     def play (self, position):
         if (position<0) or (position>8):
             return False
         player = 0
-        if self.history=="":
+        if len(self.history)==0:
             player=1
         else:
-             lastPlayer = self.board[int(self.history [len(self.history)-1])]
+             lastPlayer = self.board[self.history [len(self.history)-1]]
              if lastPlayer==1:
                  player=2
              else:
@@ -20,7 +20,7 @@ class Game():
         if self.board[position]!=0:
             return False
         self.board[position]=player
-        self.history=self.history+str(position)
+        self.history.append(position)
         return True
     def copy (self):
         other = Game()
@@ -121,6 +121,7 @@ elif c!='s':
     print ("Invalid option.")
     exit()
 while (False==game.ended()):
+    print ("=====")
     lgh = len(game.history)
     cp = False
     if (c=='s'):
@@ -129,7 +130,7 @@ while (False==game.ended()):
             cp = True
         elif (lgh==2):
             #print ("lgh="+str(lgh))
-            if (game.history[1]=='4'):
+            if (game.history[1]==4):
                 game.play(8)
                 cp = True
     if cp==False:
