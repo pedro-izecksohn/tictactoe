@@ -73,28 +73,39 @@ class Game():
                     return a
         return -1
     def almost(self):
+        li = []
         i = self.almost3(0,1,2)
         if i!=-1:
-            return i
+            li.append(i)
         i = self.almost3(0,4,8)
         if i!=-1:
-            return i
+            li.append(i)
         i = self.almost3(3,4,5)
         if i!=-1:
-            return i
+            li.append(i)
         i = self.almost3(6,7,8)
         if i!=-1:
-            return i
+            li.append(i)
         i = self.almost3(0,3,6)
         if i!=-1:
-            return i
+            li.append(i)
         i = self.almost3(6,4,2)
         if i!=-1:
-            return i
+            li.append(i)
         i = self.almost3(1,4,7)
         if i!=-1:
-            return i
-        return self.almost3(2,5,8)
+            li.append(i)
+        i = self.almost3(2,5,8)
+        if i!=-1:
+            li.append(i)
+        if len(li)==0:
+            return -1
+        for i in li:
+            g = self.copy()
+            g.play(i)
+            if g.ended():
+                return i
+        return li[0]
 
 game = Game()
 print (game)
@@ -110,46 +121,58 @@ elif c!='s':
     print ("Invalid option.")
     exit()
 while (False==game.ended()):
-    alm = game.almost()
-    if alm!=-1:
-        game.play(alm)
-    else:
-        statistics = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ti = 0
-        ntries = 10000
-        while ti<ntries:
-            g = game.copy()
-            computerPlayed = False
-            while computerPlayed==False:
-                position = int(urandom(1)[0])%9
-                computerPlayed = g.play(position)
-            g.randomPlay()
-            gw = g.winner()
-            ginc = 0
-            if gw==1:
-                if c=='f':
-                    ginc = -1
-                else:
-                    ginc = 1
-            elif gw==2:
-                if c=='f':
-                    ginc = 1
-                else:
-                    ginc = -1
-            statistics[position] = statistics[position]+ginc
-            ti = ti+1
-        bestIndex = 9
-        bestValue = -ntries
-        si = 0
-        while si<9:
-            #print (str(si)+": "+str(statistics[si]))
-            if (game.board[si]==0) and (statistics[si]>=bestValue):
-                bestValue = statistics[si]
-                bestIndex = si
-            si = si+1
-        if game.play(bestIndex)==False:
-            print ("I desist.")
-            exit()
+    lgh = len(game.history)
+    cp = False
+    if (c=='s'):
+        if (lgh==0):
+            game.play(0)
+            cp = True
+        elif (lgh==2):
+            #print ("lgh="+str(lgh))
+            if (game.history[1]=='4'):
+                game.play(8)
+                cp = True
+    if cp==False:
+        alm = game.almost()
+        if alm!=-1:
+            game.play(alm)
+        else:
+            statistics = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            ti = 0
+            ntries = 10000
+            while ti<ntries:
+                g = game.copy()
+                computerPlayed = False
+                while computerPlayed==False:
+                    position = int(urandom(1)[0])%9
+                    computerPlayed = g.play(position)
+                g.randomPlay()
+                gw = g.winner()
+                ginc = 0
+                if gw==1:
+                    if c=='f':
+                        ginc = -1
+                    else:
+                        ginc = 1
+                elif gw==2:
+                    if c=='f':
+                        ginc = 1
+                    else:
+                        ginc = -1
+                statistics[position] = statistics[position]+ginc
+                ti = ti+1
+            bestIndex = 9
+            bestValue = -ntries
+            si = 0
+            while si<9:
+                #print (str(si)+": "+str(statistics[si]))
+                if (game.board[si]==0) and (statistics[si]>=bestValue):
+                    bestValue = statistics[si]
+                    bestIndex = si
+                si = si+1
+            if game.play(bestIndex)==False:
+                print ("I desist.")
+                exit()
     print (game)
     if game.ended():
         break
